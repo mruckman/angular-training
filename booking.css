@@ -1,0 +1,40 @@
+.box { float: left; }
+#root { max-width: 1200px; margin: 0 auto; }
+
+#header { width: 100%; }
+#main { width: 70%; }
+#sidebar { width: 30%; }
+#footer { width: 100%; }
+
+/* Laptop/Tablet (1024px) */
+@media only screen and (min-width: 481px) and (max-width: 1024px) and (orientation: landscape) {
+	#header { width: 100%; }
+	#main { width: 70%; }
+	#sidebar { width: 30%; }
+	#footer { width: 100%; }
+}
+
+/* Tablet Portrait (768px) */
+@media only screen and (max-width: 1024px) and (orientation: portrait) {
+	#header { width: 100%; }
+	#main { width: 100%; }
+	#sidebar { width: 100%; }
+	#footer { width: 100%; }
+}
+
+/* Phone Landscape (480px) */
+@media only screen and (min-width: 1025px) and (max-width: 480px) and (orientation: landscape) {
+	#header { width: 100%; }
+	#main { width: 100%; }
+	#sidebar { width: 100%; }
+	#footer { width: 100%; }
+}
+
+/* iPad 3 & 4 Landscape */
+@media only screen and (width: px) and (width: 1024px) and (orientation: landscape) {
+	#header { width: 100%; }
+	#main { width: 70%; }
+	#sidebar { width: 30%; }
+	#footer { width: 100%; }
+}
+

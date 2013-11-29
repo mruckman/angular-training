@@ -1,0 +1,44 @@
+<html ng-app>
+<head>
+	<title>Your Shopping Cart</title>
+</head>
+<body ng-controller='CartController'
+<h1>Your Shopping Cart</h1>
+
+<p>Instructions: Feel free to update the quantities and remove items.</p>
+
+<div ng-repeat='item in items'>
+	<button ng-click="remove($index)">Remove</button>
+	<input ng-change="updateTotal()" ng-model="item.quantity">
+	<span>{{item.title}}</span>
+	<span> for {{item.price | currency}} each</span>
+	<span> cost a grand total of {{item.price * item.quantity | currency}}</span>
+</div>
+Grand Total = {{total}}
+<script>
+	function CartController($scope) {
+		$scope.items = [
+			{title: 'Paint pots', quantity: 8, price: 3.93},
+			{title: 'Polka dots', quantity: 17, price: 12.93},
+			{title: 'Pebbles', quantity: 5, price: 6.93}
+		];
+
+		$scope.remove = function (index) {
+			$scope.items.splice(index, 1);
+			$scope.updateTotal();
+		}
+
+		$scope.updateTotal = function () {
+			var total = 0;
+			for (var key in $scope.items) {
+				total += ($scope.items[key].price * $scope.items[key].quantity);
+			}
+			$scope.total = total.toFixed(2);
+		}
+
+		$scope.updateTotal();
+	}
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
+</body>
+</html>
