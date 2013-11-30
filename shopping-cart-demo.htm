@@ -25,18 +25,16 @@ Grand Total = {{total}}
 
 		$scope.remove = function (index) {
 			$scope.items.splice(index, 1);
-			$scope.updateTotal();
 		}
 
-		$scope.updateTotal = function () {
+		// NOTE: HAVE THE TOTALS ALWAYS UPDATE AFTER EACH CHANGE
+		$scope.$watch(function () {
 			var total = 0;
 			for (var key in $scope.items) {
 				total += ($scope.items[key].price * $scope.items[key].quantity);
 			}
 			$scope.total = total.toFixed(2);
-		}
-
-		$scope.updateTotal();
+		});
 	}
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
