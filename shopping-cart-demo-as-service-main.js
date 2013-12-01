@@ -1,6 +1,6 @@
 var shoppingApp = angular.module('shoppingApp', []);
 
-shoppingApp.factory('Items', function() {
+shoppingApp.factory('ItemsFactory', function() {
 	var items = [
 		{title: 'Paint pots', quantity: 8, price: 3.93},
 		{title: 'Polka dots', quantity: 17, price: 12.93},
@@ -9,8 +9,8 @@ shoppingApp.factory('Items', function() {
 	return items;
 })
 
-function CartController($scope, Items) {
-	$scope.items = Items;
+function CartController($scope, ItemsFactory) {
+	$scope.items = ItemsFactory;
 
 	$scope.remove = function (index) {
 		$scope.items.splice(index, 1);
