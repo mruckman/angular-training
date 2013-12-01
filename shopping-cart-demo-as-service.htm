@@ -1,0 +1,21 @@
+<html ng-app="shoppingApp">
+<head>
+	<title>Your Shopping Cart</title>
+</head>
+<body ng-controller='CartController'>
+<h1>Your Shopping Cart</h1>
+
+<p>Instructions: Feel free to update the quantities and remove items.</p>
+
+<div ng-repeat='item in items'>
+	<button ng-click="remove($index)">Remove</button>
+	<input ng-change="updateTotal()" ng-model="item.quantity">
+	<span>{{item.title}}</span>
+	<span> for {{item.price | currency}} each</span>
+	<span> cost a grand total of {{item.price * item.quantity | currency}}</span>
+</div>
+Grand Total = {{total}}
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
+<script type="text/javascript" src="shopping-cart-demo-as-service-main.js"></script>
+</body>
+</html>
