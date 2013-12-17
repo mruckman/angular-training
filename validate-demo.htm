@@ -1,0 +1,108 @@
+<html ng-app>
+<head>
+	<title>Your Validation Demo</title>
+	<style type="text/css">
+		.css-form-validation input.ng-invalid {
+			background-color: #FA787E;
+		}
+		.css-form-validation input.ng-valid {
+			background-color: #78FA89;
+		}
+		.css-form-validation input.ng-pristine {
+			background-color: #FFFFFF;
+		}
+		.error-class {
+			text-align: left;
+			margin-left: 3px;
+			color: darkred;
+		}
+		.content {
+			padding-bottom: 3px;
+			padding-top: 3px;
+			float: none;
+			margin-bottom: 3px;
+			width: 660px;
+		}
+	</style>
+</head>
+<body ng-controller='MyController'>
+<h1>Your Validation Demo</h1>
+<ol>
+	<li>&lt;input</li>
+	<li> ng-model="{string}" Assignable angular expression to data-bind to.</li>
+	<li> [name="{string}"] Property name of the form under which the control is published.</li>
+	<li> [required] Sets required validation error key if the value is not entered. HTML5</li>
+	<li> [ng-required="{boolean}"] Sets required attribute if set to true</li>
+	<li> [ng-minlength="{number}"] Sets minlength validation error key if the value is shorter than minlength.</li>
+	<li> [ng-maxlength="{number}"] Sets maxlength validation error key if the value is longer than maxlength.</li>
+	<li> [ng-pattern="{string}"] Expected value is /regexp/ for inline patterns or regexp for patterns defined as scope
+		expressions.
+	</li>
+	<li> [ng-change="{string}"]&gt; Angular expression to be executed when input changes due to user interaction with
+		the input element.
+	</li>
+	<li>&lt;/input&gt;</li>
+</ol>
+
+<form name="form" novalidate class="css-form-validation">
+	<div class="content">
+		Guest Name* <input name="guestName" type="text" size="20" maxlength="20" ng-model="myForm.guestName" ng-focus="guestNameFocused = true" ng-blur="guestNameFocused = false" ng-required="true">
+		<div class="error-class" ng-show="form.guestName.$dirty && form.guestName.$invalid && !guestNameFocused">Invalid Syntax</div>
+	</div>
+
+	<div class="content">
+		Phone Number* <input name="phoneNumber" type="text" size="20" maxlength="20" ng-model="myForm.phoneNumber" ng-focus="phoneNumberFocused = true" ng-blur="phoneNumberFocused = false" ng-required="true">
+		<div class="error-class" ng-show="form.phoneNumber.$dirty && form.phoneNumber.$invalid && !phoneNumberFocused">Invalid Syntax</div>
+	</div>
+
+	<div class="content">
+		Email * <input name="email" type="email" size="20" maxlength="40" ng-model="myForm.email" ng-required="true">
+		<div class="error-class" ng-show="myForm.email.$error.required">Invalid Syntax</div>
+	</div>
+
+	<div class="content">
+		<button ng-click="reset()" ng-disabled="isUnchanged(myForm)">Reset</button>
+		<button ng-click="update(myForm)" ng-disabled="form.$invalid || isUnchanged(myForm)">Continue</button>
+	</div>
+</form>
+
+shoppingCart: {{shoppingCart | json}}
+
+<script>
+	// CONTROLLER
+	function MyController($scope) {
+		$scope.shoppingCart = { "guestName": "JohnQ Public!" };
+
+		$scope.update = function (myForm) {
+			$scope.shoppingCart = angular.copy(myForm);
+		};
+
+		$scope.reset = function () {
+			$scope.myForm = angular.copy($scope.shoppingCart);
+		};
+
+		$scope.reset();
+	}
+
+	// DIRECTIVE
+
+	angular.forEach([ 'blur', 'focus' ], function (name) {
+		var directiveName = 'hal' + name.replace(/^\w/, function (char) {
+			return char.toUpperCase();
+		});
+
+		myApp.directive(directiveName, [ '$parse', function ($parse) {
+			return function (scope, element, attr) {
+				var fn = $parse(attr[ directiveName ]);
+				element.bind(name.toLowerCase(), function (event) {
+					scope.$apply(function () {
+						fn(scope, { $event: event });
+					});
+				});
+			};
+		}]);
+	});
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
+</body>
+</html>
