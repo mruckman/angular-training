@@ -2,18 +2,17 @@
 <head>
 	<title>Your Validation Demo</title>
 	<style type="text/css">
-		.css-form-validation input.ng-invalid {
-			background-color: #FA787E;
-		}
 		.css-form-validation input.ng-valid {
 			background-color: #78FA89;
+		}
+		.css-form-validation input.ng-invalid {
+			background-color: #FA787E;
 		}
 		.css-form-validation input.ng-pristine {
 			background-color: #FFFFFF;
 		}
 		.error-class {
 			text-align: left;
-			margin-left: 3px;
 			color: darkred;
 		}
 		.content {
@@ -24,6 +23,27 @@
 			width: 660px;
 		}
 	</style>
+	<script>
+		// CONTROLLER
+		function MyController($scope) {
+			$scope.shoppingCart = { "guestName": "JohnQ Public!" };
+			$scope.update = function (myForm) {
+				if ($scope.form.$valid) {
+					$scope.shoppingCart = angular.copy(myForm);
+					$scope.form.guestName.$error.halcustom = false;
+				}
+				else {
+					$scope.form.submitted = true;
+					$scope.form.guestName.$error.halcustom = true;
+				}
+			};
+			$scope.loadShoppingCart = function () {
+				$scope.myForm = angular.copy($scope.shoppingCart);
+				alert('copying');
+			};
+		}
+	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
 </head>
 <body ng-controller='MyController'>
 <h1>Your Validation Demo</h1>
@@ -36,73 +56,88 @@
 	<li> [ng-minlength="{number}"] Sets minlength validation error key if the value is shorter than minlength.</li>
 	<li> [ng-maxlength="{number}"] Sets maxlength validation error key if the value is longer than maxlength.</li>
 	<li> [ng-pattern="{string}"] Expected value is /regexp/ for inline patterns or regexp for patterns defined as scope
-		expressions.
-	</li>
+		expressions.	</li>
 	<li> [ng-change="{string}"]&gt; Angular expression to be executed when input changes due to user interaction with
-		the input element.
-	</li>
+		the input element.	</li>
 	<li>&lt;/input&gt;</li>
 </ol>
 
+<p>References: </p>
+<ul>
+  <li><a href="http://www.ng-newsletter.com/posts/validations.html">http://www.ng-newsletter.com/posts/validations.html</a></li>
+  <li><a href="http://docs.angularjs.org/guide/forms">http://docs.angularjs.org/guide/forms</a></li>
+  <li><a href="http://docs.angularjs.org/api/ng.directive:input">http://docs.angularjs.org/api/ng.directive:input</a></li>
+</ul>
 <form name="form" novalidate class="css-form-validation">
 	<div class="content">
-		Guest Name* <input name="guestName" type="text" size="20" maxlength="20" ng-model="myForm.guestName" ng-focus="guestNameFocused = true" ng-blur="guestNameFocused = false" ng-required="true">
-		<div class="error-class" ng-show="form.guestName.$dirty && form.guestName.$invalid && !guestNameFocused">Invalid Syntax</div>
+		Guest Name*
+		<input name="guestName"
+			type="text"
+			size="20"
+			maxlength="20"
+			ng-model="myForm.guestName"
+			ng-focus="guestNameFocused = true"
+			ng-blur="guestNameFocused = false"
+			ng-required="true">
+		{{form.guestName.$error | json}}
+		<div ng-show="form.submitted">
+			<div class="error-class" ng-show="form.guestName.$error.required">Required</div>
+			<div class="error-class" ng-show="form.guestName.$error.halcustom">HAL Custom Error</div>
+		</div>
+		<div ng-show="form.guestName.$dirty && !guestNameFocused">
+			<!-- TODO: INVALID GUEST NAME -->
+		</div>
 	</div>
 
 	<div class="content">
-		Phone Number* <input name="phoneNumber" type="text" size="20" maxlength="20" ng-model="myForm.phoneNumber" ng-focus="phoneNumberFocused = true" ng-blur="phoneNumberFocused = false" ng-required="true">
-		<div class="error-class" ng-show="form.phoneNumber.$dirty && form.phoneNumber.$invalid && !phoneNumberFocused">Invalid Syntax</div>
+		Phone Number*
+		<input name="phoneNumber"
+			type="number"
+			size="20"
+			length="20"
+			maxlength="20"
+			ng-model="myForm.phoneNumber"
+			ng-focus="phoneNumberFocused = true"
+			ng-blur="phoneNumberFocused = false"
+			ng-minlength="10"
+			ng-required="true">
+		{{form.phoneNumber.$error | json}}
+		<div ng-show="form.submitted">
+			<div class="error-class" ng-show="form.phoneNumber.$error.required">Required</div>
+		</div>
+		<div ng-show="form.phoneNumber.$dirty && !phoneNumberFocused">
+			<div class="error-class" ng-show="form.phoneNumber.$error.number">Please enter a number</div>
+			<div class="error-class" ng-show="form.phoneNumber.$error.minlength">Please enter at least 10 digits</div>
+		</div>
 	</div>
 
 	<div class="content">
-		Email * <input name="email" type="email" size="20" maxlength="40" ng-model="myForm.email" ng-required="true">
-		<div class="error-class" ng-show="myForm.email.$error.required">Invalid Syntax</div>
+		Email *
+		<input name="email"
+			type="email"
+			size="40"
+			maxlength="40"
+			ng-model="myForm.email"
+			ng-focus="emailFocused = true"
+			ng-blur="emailFocused = false"
+			ng-required="true">
+		{{form.email.$error | json}}
+		<div ng-show="form.submitted">
+			<div class="error-class" ng-show="form.email.$error.required">Required</div>
+		</div>
+		<div ng-show="form.email.$dirty && !emailFocused">
+			<div class="error-class" ng-show="form.email.$error.email">Invalid email address</div>
+		</div>
 	</div>
 
 	<div class="content">
-		<button ng-click="reset()" ng-disabled="isUnchanged(myForm)">Reset</button>
-		<button ng-click="update(myForm)" ng-disabled="form.$invalid || isUnchanged(myForm)">Continue</button>
+		<button ng-click="loadShoppingCart()">Load Shopping Cart</button>
+		<button ng-click="update(myForm)" ng-disabled="form.$invalid || isUnchanged(myForm)">Continue Only When Complete</button>
+		<button ng-click="update(myForm)" >Continue and Fire Required Edits</button>
 	</div>
 </form>
 
 shoppingCart: {{shoppingCart | json}}
 
-<script>
-	// CONTROLLER
-	function MyController($scope) {
-		$scope.shoppingCart = { "guestName": "JohnQ Public!" };
-
-		$scope.update = function (myForm) {
-			$scope.shoppingCart = angular.copy(myForm);
-		};
-
-		$scope.reset = function () {
-			$scope.myForm = angular.copy($scope.shoppingCart);
-		};
-
-		$scope.reset();
-	}
-
-	// DIRECTIVE
-
-	angular.forEach([ 'blur', 'focus' ], function (name) {
-		var directiveName = 'hal' + name.replace(/^\w/, function (char) {
-			return char.toUpperCase();
-		});
-
-		myApp.directive(directiveName, [ '$parse', function ($parse) {
-			return function (scope, element, attr) {
-				var fn = $parse(attr[ directiveName ]);
-				element.bind(name.toLowerCase(), function (event) {
-					scope.$apply(function () {
-						fn(scope, { $event: event });
-					});
-				});
-			};
-		}]);
-	});
-</script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
 </body>
 </html>
